@@ -76,7 +76,17 @@ class Validation {
   }
 
   validateNome(name) {
-    if(name.length <3) {
+
+
+    if(!name){
+      this.errors.push({
+        campo: 'nome',
+        mensagem: 'O campo "nome" é obrigatório.',
+      });
+    }
+
+
+    if(name.length < 5 || name.length > 60) {
       this.errors.push({
         campo: 'nome',
         mensagem: 'O campo "nome" deve ter pelo menos 3 caracteres.',
@@ -85,10 +95,67 @@ class Validation {
   }
 
   validateCpf(cpf) {
-    if(cpf.length >12) {
+
+    if(!cpf){
+      this.errors.push({
+        campo: 'cpf',
+        mensagem: 'O campo "cpf" é obrigatório.',
+      });
+    }
+
+    if(cpf.length !== 11) {
       this.errors.push({
         campo: 'cpf',
         mensagem: 'O campo "cpf" deve ter pelo menos 11 caracteres.',
+      });
+    }
+  }
+
+  validateDt_nascimento(dtNascimento){
+    
+    if(!dtNascimento){
+      this.errors.push({
+        campo: 'dt_nascimento',
+        mensagem: 'O campo "dt_nascimento" é obrigatório.',
+      });
+    }
+    
+    const data = DateTime.fromFormat(dtNascimento, 'ddMMyyyy');
+    if (!data.isValid) {
+      this.errors.push({
+        campo: 'dt_nascimento',
+        mensagem: 'O campo "dt_nascimento" deve ser uma data válida no formato ddMMyyyy.',
+      })
+    }    
+  }
+
+  validateRenda_mensal(rendaMensal){
+    const pattern = /^-?\d+(\,\d{2})?$/;
+
+
+    if(rendaMensal < 0){
+      this.errors.push({
+        campo: 'renda_mensal',
+        mensagem: 'O campo "renda_mensal" não pode ser negativo.',
+      });
+    }
+
+
+    if(!pattern.test(rendaMensal)){
+      this.errors.push({
+        campo: 'renda_mensal',
+        mensagem: 'Os ultimos 3 numeros da renda mensal deve ser seguidos por virgula + 2 numeros.',
+      });
+    }
+  }
+
+  validateEstado_civil(estado_civil){
+    const estadoCivil = ['s', 'c', 'd', 'v'];
+
+    if(!estadoCivil.includes(estado_civil.toLowerCase())){
+      this.errors.push({
+        campo: 'estado_civil',
+        mensagem: 'O campo "estado_civil" deve ser s, c, d ou v.',
       });
     }
   }
@@ -107,10 +174,7 @@ class FormatFileName{
     const now = DateTime.now().setLocale("pt-br").toFormat("D-HHmmss");
     const formatFile  = now.replaceAll( '/', '')
     return `erros-${formatFile}.json`
-    
   }
-
-  
 }
 
 const fileName = process.argv[2]
@@ -118,3 +182,5 @@ const fileName = process.argv[2]
 const fileOutput = new FormatFileName(fileName).createFileName();
 const transformer = new JSONTransformer(fileName, fileOutput, Validation);
 transformer.executeTransformation();
+
+
