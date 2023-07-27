@@ -81,7 +81,7 @@ class Validation {
     if(!name){
       this.errors.push({
         campo: 'nome',
-        mensagem: 'O campo "nome" é obrigatório.',
+        mensagem: 'campo obrigatório ausente',
       });
     }
 
@@ -99,7 +99,7 @@ class Validation {
     if(!cpf){
       this.errors.push({
         campo: 'cpf',
-        mensagem: 'O campo "cpf" é obrigatório.',
+        mensagem: 'campo obrigatório ausente.',
       });
     }
 
@@ -116,7 +116,7 @@ class Validation {
     if(!dtNascimento){
       this.errors.push({
         campo: 'dt_nascimento',
-        mensagem: 'O campo "dt_nascimento" é obrigatório.',
+        mensagem: 'campo obrigatório ausente.',
       });
     }
     
@@ -132,6 +132,13 @@ class Validation {
   validateRenda_mensal(rendaMensal){
     const pattern = /^-?\d+(\,\d{2})?$/;
 
+
+    if(!rendaMensal){
+      this.errors.push({
+        campo: 'renda_mensal',
+        mensagem: 'campo obrigatório ausente.',
+      });
+    }
 
     if(rendaMensal < 0){
       this.errors.push({
@@ -151,6 +158,13 @@ class Validation {
 
   validateEstado_civil(estado_civil){
     const estadoCivil = ['s', 'c', 'd', 'v'];
+
+    if(!estado_civil){
+      this.errors.push({
+        campo: 'estado_civil',
+        mensagem: 'campo obrigatório ausente.',
+      });
+    }
 
     if(!estadoCivil.includes(estado_civil.toLowerCase())){
       this.errors.push({
